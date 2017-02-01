@@ -11,7 +11,8 @@ public class EatHealthy {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //close operation
         frame.setSize(800, 600);
-        //sett size
+        //sets size of frame
+        
         DefaultListModel l = new DefaultListModel();
         for(int i = 0; i < 90; i++){
             l.addElement("apple");
@@ -25,16 +26,15 @@ public class EatHealthy {
         wList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         //contol selection mode for west JList
         wList.setFixedCellWidth(200);
-        wList.setDragEnabled(true);
         JList eList = new JList(l);
         
         //same as above but for e JList
         frame.getContentPane().add(eList, BorderLayout.EAST);
         eList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         eList.setFixedCellWidth(200);
-        eList.setDragEnabled(true);
+        
         frame.setVisible(true);
-        JOptionPane.showMessageDialog(frame, "Nice Message");
+        //sets frame visible
     }
     
 }
