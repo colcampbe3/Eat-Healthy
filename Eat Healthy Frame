@@ -1,0 +1,16 @@
+package eathealthy;
+import javax.swing.JFrame;
+
+public class EatHealthy extends JFrame
+{
+    public static void main(String[] args)
+    {
+        JFrame frame = new JFrame("Eat Healthy!");
+        //creates frame
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //close operation
+        
+        frame.pack();
+        frame.setVisible(true);
+    }
+}
