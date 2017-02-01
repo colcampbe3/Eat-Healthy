@@ -1,18 +1,40 @@
 package eathealthy;
-import javax.swing.JFrame;
-public class EatHealthy extends JFrame
-{
 
-    public static void main(String[] args)
+import java.awt.BorderLayout;
+import javax.swing.*;
 
-    {
-        JFrame frame = new JFrame("Eat Healthy!");
-        //creates frame
-
+public class EatHealthy {
+    
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Eat Healthy");
+        //create jframe
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //close operation
-        
         frame.setSize(800, 600);
+        //sett size
+        DefaultListModel l = new DefaultListModel();
+        for(int i = 0; i < 90; i++){
+            l.addElement("apple");
+        }
+        //create a list model
+        
+        JList wList = new JList(l);
+        //create JList for fridge (west panel), using list model
+        frame.getContentPane().add(wList, BorderLayout.WEST);
+        //add JList to west panel
+        wList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        //contol selection mode for west JList
+        wList.setFixedCellWidth(200);
+        wList.setDragEnabled(true);
+        JList eList = new JList(l);
+        
+        //same as above but for e JList
+        frame.getContentPane().add(eList, BorderLayout.EAST);
+        eList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        eList.setFixedCellWidth(200);
+        eList.setDragEnabled(true);
         frame.setVisible(true);
+        JOptionPane.showMessageDialog(frame, "Nice Message");
     }
+    
 }
