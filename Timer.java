@@ -1,10 +1,14 @@
+
 public class Timer {
+    
     private JTextField jtf;
+    
     public Timer(){
         jtf = new JTextField("Monday");
         jtf.setEditable(false);
         this.set();
     }
+    
     public void change(){
         if(jtf.getText().equals("Monday")){
             jtf = new JTextField("Tuesday");
@@ -24,10 +28,16 @@ public class Timer {
         jtf.setEditable(false);
         this.set();
     }
+    
     public void set(){
         jtf.setBounds(10, 10, 90, 30);
     }
+    
     public JTextField getField(){
         return jtf;
+    }
+    
+    public boolean isFriday(){
+        return jtf.getText().equals("Friday");
     }
 }
