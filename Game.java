@@ -12,19 +12,19 @@ public class Game() {
         fridge = fridgeRef;
         lunchBox = lunchBoxRef;
     }
-    public void add() {
+    public void add() { //Called by Add Button
         if (lunchBox.getItemList().getSelectedIndex() != -1 && lunchBox.getModel().size() > 0) {
 					fridge.addItem(lunchBox.getSelectedItem());
 					lunchBox.removeSelectedItem();
         }
     }
-    public void remove() {
+    public void remove() { //Called by Remove Button
          if (lunchBox.getItemList().getSelectedIndex() != -1 && lunchBox.getModel().size() > 0) {
 					fridge.addItem(lunchBox.getSelectedItem());
 					lunchBox.removeSelectedItem();
          }
     }
-    public void pack() {
+    public void pack() { //Called by Pack Lunch Button
 	 ArrayList<FoodObject> stuff = lunchBox.getFoods();
 	 System.out.printf("\n%-24s %8s %12s\n", "Name", "Calories", "Points");
 	 System.out.println("-------------------------------------------------");
