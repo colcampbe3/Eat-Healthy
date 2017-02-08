@@ -92,6 +92,10 @@ public class EatHealthy {
 					System.out.printf("%-24s %8s %12s\n", stuff.get(i).getName(), stuff.get(i).getCalories(),
 							stuff.get(i).getValue());
 				}
+                                lunchBox.clearList();
+                                if(day.isFriday()){
+                                    fridge.fillRandom();
+                                }
                                 frame.remove(day.getField());
                                 day.change();
                                 frame.add(day.getField());
