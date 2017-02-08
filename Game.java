@@ -25,6 +25,13 @@ public class Game() {
          }
     }
     public void pack() {
+	 ArrayList<FoodObject> stuff = lunchBox.getFoods();
+	 System.out.printf("\n%-24s %8s %12s\n", "Name", "Calories", "Points");
+	 System.out.println("-------------------------------------------------");
+	 for (int i = 0; i < stuff.size(); i++) {
+	 	System.out.printf("%-24s %8s %12s\n", stuff.get(i).getName(), stuff.get(i).getCalories(),
+		stuff.get(i).getValue());
+	 }
       
     }
   
