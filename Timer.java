@@ -1,3 +1,4 @@
+package eathealthy;
 
 public class Timer {
     
@@ -8,6 +9,7 @@ public class Timer {
         jtf.setEditable(false);
         this.set();
     }
+    //constructor, sets timer to monday, calls a function to set the size and locaton
     
     public void change(){
         if(jtf.getText().equals("Monday")){
@@ -28,16 +30,20 @@ public class Timer {
         jtf.setEditable(false);
         this.set();
     }
+    //increments timer forward by one day and friday back to monday
     
     public void set(){
         jtf.setBounds(10, 10, 90, 30);
     }
+    //sets location and size of timer
     
     public JTextField getField(){
         return jtf;
     }
+    //method to get underlying text field, so it can be added to frame
     
     public boolean isFriday(){
         return jtf.getText().equals("Friday");
     }
+    //checks if it is friday, this is used to reset the fridge each week
 }
