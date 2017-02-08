@@ -43,6 +43,8 @@ public class EatHealthy {
 		// initializes scrollable lists for fridge and lunchbox
 		ListBox fridge = new ListBox();
 		ListBox lunchBox = new ListBox();
+                
+                Timer day = new Timer();
 
 		// fills fridge list with random foods on startup
 		fridge.fillRandom();
@@ -90,6 +92,13 @@ public class EatHealthy {
 					System.out.printf("%-24s %8s %12s\n", stuff.get(i).getName(), stuff.get(i).getCalories(),
 							stuff.get(i).getValue());
 				}
+                                lunchBox.clearList();
+                                if(day.isFriday()){
+                                    fridge.fillRandom();
+                                }
+                                frame.remove(day.getField());
+                                day.change();
+                                frame.add(day.getField());
 			}
 		});
 
@@ -111,6 +120,7 @@ public class EatHealthy {
 		frame.add(removeButton);
 		frame.add(packLunchButton);
 		frame.add(randomButton);
+                frame.add(day.getField());
 
 		// Checks if background image exists before showing
 		if (f.exists()) {
