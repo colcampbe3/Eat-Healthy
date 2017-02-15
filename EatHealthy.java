@@ -5,12 +5,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class EatHealthy {
@@ -20,7 +20,7 @@ public class EatHealthy {
 
 	private int btnWidth = 120;
 	private int btnHeight = 40;
-	
+
 	private String path = "res/background/fridgeScene.jpg";
 	private File f = new File(path);
 
@@ -43,8 +43,10 @@ public class EatHealthy {
 		// initializes scrollable lists for fridge and lunchbox
 		ListBox fridge = new ListBox();
 		ListBox lunchBox = new ListBox();
-                
-                Timer day = new Timer();
+
+		Timer day = new Timer();
+
+		FoodStatsPanel statsPanel = new FoodStatsPanel(day, lunchBox);
 
 		// fills fridge list with random foods on startup
 		fridge.fillRandom();
@@ -85,20 +87,23 @@ public class EatHealthy {
 		// adds function to the pack lunch button
 		packLunchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<FoodObject> stuff = lunchBox.getFoods();
-				System.out.printf("\n%-24s %8s %12s\n", "Name", "Calories", "Points");
-				System.out.println("-------------------------------------------------");
-				for (int i = 0; i < stuff.size(); i++) {
-					System.out.printf("%-24s %8s %12s\n", stuff.get(i).getName(), stuff.get(i).getCalories(),
-							stuff.get(i).getValue());
+				// ArrayList<FoodObject> stuff = lunchBox.getFoods();
+				// System.out.printf("\n%-24s %8s %12s\n", "Name", "Calories",
+				// "Points");
+				// System.out.println("-------------------------------------------------");
+				// for (int i = 0; i < stuff.size(); i++) {
+				// System.out.printf("%-24s %8s %12s\n", stuff.get(i).getName(),
+				// stuff.get(i).getCalories(),
+				// stuff.get(i).getValue());
+				// }
+				statsPanel.update();
+				lunchBox.clearList();
+				if (day.isFriday()) {
+					fridge.fillRandom();
 				}
-                                lunchBox.clearList();
-                                if(day.isFriday()){
-                                    fridge.fillRandom();
-                                }
-                                frame.remove(day.getField());
-                                day.change();
-                                frame.add(day.getField());
+				frame.remove(day.getField());
+				day.change();
+				frame.add(day.getField());
 			}
 		});
 
@@ -114,13 +119,14 @@ public class EatHealthy {
 		frame.setLayout(null);
 
 		// attach GUI components to frame
+		frame.add(statsPanel);
 		frame.add(fridge);
 		frame.add(lunchBox);
 		frame.add(addButton);
 		frame.add(removeButton);
 		frame.add(packLunchButton);
 		frame.add(randomButton);
-                frame.add(day.getField());
+		frame.add(day.getField());
 
 		// Checks if background image exists before showing
 		if (f.exists()) {
@@ -148,8 +154,19 @@ public class EatHealthy {
 		fridge.setBounds(WIDTH / 2 - (fridge.WIDTH / 2), HEIGHT / 2 - (fridge.HEIGHT / 2 + 50), fridge.WIDTH,
 				fridge.HEIGHT);
 		lunchBox.setBounds(20, HEIGHT / 2 - (lunchBox.HEIGHT / 2 + 50), lunchBox.WIDTH, lunchBox.HEIGHT);
+		statsPanel.setBounds(WIDTH / 2 - (statsPanel.getWidth() / 2), HEIGHT / 2 + 200, statsPanel.getWidth(),
+				statsPanel.getHeight());
 
 		frame.setVisible(true);
+
+		String popupTxt = "<html><body width='220'>"
+				+ "<h1>Eat Healthy</h1>"
+				+ "<p>Welcome to Eat Healthy. A game that simulates packing a lunch.</p><br>"
+				+ "<p><u>How To Play:</u> &nbsp&nbsp Pick foods from the list on the right to pack into the lunch box."
+				+ " Try picking an assortment of healthy foods to score big.</p>";
+
+		// show how to play dialog on start
+		JOptionPane.showMessageDialog(null, popupTxt);
 	}
 
 	public static void main(String[] args) {
