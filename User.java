@@ -1,3 +1,4 @@
+package eathealthy;
 /**
  * Created by Rick on 3/8/2017.
  * This is an object to store the information linked to the user profile with commands to set and retrieve the
@@ -15,8 +16,11 @@ public class User {
     //private boolean unlock[]; //Commented out until implemented.
 
 
-    public User(String name) {
+    public User(String name, int weight, int age, boolean sex) {
         this.name = name;
+        this.weight = weight;
+        this.age = age;
+        this.sex = sex;
         this.weeklyHighScore = 0;
         this.dailyHighScore = 0;
         this.totalScore = 0;

@@ -33,7 +33,8 @@ public class EatHealthy {
 
 	public static void main(String[] args) {
 
-		new EatHealthy().start();
+                UserInfo user = new UserInfo();
+                user.setVisible(true);
 
 	}
 
@@ -41,6 +42,7 @@ public class EatHealthy {
 	 * Method that starts the game by initializing frame and all components
 	 */
 	public void start() {
+                
 		// creates all food objects
 		FoodAssets.init();
 
