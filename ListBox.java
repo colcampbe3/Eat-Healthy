@@ -119,16 +119,115 @@ public class ListBox extends JPanel {
 		return totalCal;
 	}
 
-	public int getTotalPoints() {
+	public int getTotalPoints(double weight, int age, boolean sex) { //Passes values for use in calculation -R
 
-		int totalPoints = 0;
+        /* This method of point calculation gives flat amounts of points for meeting certain benchmarks
+         This means there is a maxnumber of points that can be earned in an single day and by extension a single week.
+         This means it's possible to reach these values and "win" the game. It can be changed to an linear model if desired.
+         -R
+          */
 
-		for (int i = 0; i < model.size(); i++) {
-			totalPoints += model.getElementAt(i).getValue();
-		}
 
-		return totalPoints;
-	}
+
+
+        int totalPoints = 0;
+        int totalCal = 0;
+        int totalViC = 0;
+        int totalViK = 0;
+        int totalPro = 0;
+        int totalSod = 0;
+        int totalSug = 0;
+        for (int i = 0; i < model.size(); i++) {
+            totalCal += model.getElementAt(i).getCalories();
+            totalViC += model.getElementAt(i).getVitaminC();
+            totalViK += model.getElementAt(i).getCalories();
+            totalPro += model.getElementAt(i).getVitaminC();
+            totalSod += model.getElementAt(i).getCalories();
+            totalSug += model.getElementAt(i).getVitaminC();
+        }
+        /*These values are WIP feel free to change them for balancing reasons.
+        CALORIES
+
+                    ((100*age) + 900) / 3
+                        ^ This is the daily recommended calories for a male divided by three.
+                            NOTE: THIS IS ONLY FOR AGES 9 - 12
+
+        If total Calories is within 100 points of the recommended value you get 100 points
+        Otherwise if it's within 200 points you get 50. -R      */
+        if (sex) {
+            if ( Math.abs(totalCal - (((100*age) + 900)/3)) <= 100) {
+                totalPoints += 100;
+            }
+            else if( Math.abs(totalCal - (((100*age) + 900)/3)) <= 200) {
+                totalPoints += 50;
+            }
+        }
+        else {
+            if ( Math.abs(totalCal - (((100*age) + 700)/3)) <= 100) {
+                totalPoints += 100;
+            }
+            else if( Math.abs(totalCal - (((100*age) + 700)/3)) <= 200) {
+                totalPoints += 50;
+            }
+        }
+        //SODIUM - 1500mg Daily
+        //If total Sodium is within 100mgs of recommended value divided by three you get 100 points
+        //Otherwise if it's within 200mgs you get 50 points. -R
+        if ( Math.abs(totalSod - 500) <= 100) {
+            totalPoints += 100;
+        }
+        else if ( Math.abs(totalSod - 500) <= 200) {
+            totalPoints += 50;
+        }
+        //SUGAR - 30g Daily
+        //If total Sugar is within 3gs of recommended value divided by three you get 100 points
+        //Otherwise if it's within 5gs you get 50 points. -R
+        if ( Math.abs(totalSug - 10) <= 3) {
+            totalPoints += 100;
+        }
+        else if ( Math.abs(totalSug - 10) <= 5) {
+            totalPoints += 50;
+        }
+        /* Protein
+
+            (weight * .45g) / 3 <-- This is the daily recommended amount of protien divided by three.
+                NOTE: THIS IS ONLY FOR AGES 9 - 12.
+
+            Full points is within 80% of daily value
+            Half points is within 65% of daily value
+            -R
+         */
+        if ( Math.abs((totalPro - ((weight *.45)/3))) <= (weight * .36)/3) {
+            totalPoints += 100;
+        }
+        else if ( (totalPro - ((weight *.45)/3)) <= (weight * .29)/3) {
+            totalPoints += 50;
+        }
+        //Vitamin C - 45mg Daily
+        //If total Vitamin C is above 100% of recommended value divided by three you get 100 points
+        //Otherwise if it's above 90% you get 50 points. -R
+        if ( totalViC/15 >= 1) {
+            totalPoints += 100;
+        }
+        else if ( totalViC >= .9) {
+            totalPoints += 50;
+        }
+        /*Vitamin K - 0.006mg Daily 0r 60mcg (MicroGrams)
+            If total Vitam C is above 100% of recommended value divided by three you get 100 points
+            Otherwise if it's above 90% you get 50 points.
+
+            Vitamin K is found in green vegetables I included it to as a way to check if the lunch included vegetables,
+             if this turns ot to be to difficult to track it can be removed.
+             -R
+        */
+        if ( totalViK/0.002 >= 1) {
+            totalPoints += 100;
+        }
+        else if ( totalViK/0.0018 >= .9) {
+            totalPoints += 50;
+        }
+        return totalPoints;
+    }
 
 	/*
 	 * Method that fills list with random food items
