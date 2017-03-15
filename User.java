@@ -25,6 +25,16 @@ public class User {
         this.dailyHighScore = 0;
         this.totalScore = 0;
     }
+    
+    public User(String name, double weight, int age, boolean sex) {
+        this.name = name;
+        this.weight = weight;
+        this.age = age;
+        this.sex = sex;
+        this.weeklyHighScore = 0;
+        this.dailyHighScore = 0;
+        this.totalScore = 0;
+    }
 
     public String getName() {
         return this.name;
