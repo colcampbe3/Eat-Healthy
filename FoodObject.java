@@ -1,75 +1,73 @@
-package eathealthy;
-
 public class FoodObject {
 
-	private String name;
-	private int calories;
-	private int value;
-	private int sodium;
-	private float sugar;
-	private float protein;
-	
-	public FoodObject(String name, int cal,  int sodium, float sugar, float protein, int val){
-		this.name = name;
-		this.calories = cal;
-		this.sodium = sodium;
-		this.sugar = sugar;
-		this.protein = protein;
-		this.value = val;
-	}
-	
-	@Override
-	public String toString(){
-		return name;
-	}
+    private String name;
+    private double calories;
+    private double vitaminC;
+    private double vitaminK;
+    private double protein;
+    private double sodium;
+    private double sugar;
+    private int value;
 
-	
-	// GETTERS SETTERS
-	public String getName() {
-		return name;
-	}
+    public FoodObject(String name, double cal, double vitC, double vitK, double pro, double sod, double sug, int val){
+        this.name = name;
+        this.calories = cal;
+        this.vitaminC = vitC;
+        this.vitaminK = vitK;
+        this.protein = pro;
+        this.sodium = sod;
+        this.sugar = sug;
+        this.value = val;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public String toString(){
+        return name;
+    }
 
-	public int getCalories() {
-		return calories;
-	}
 
-	public void setCalories(int calories) {
-		this.calories = calories;
-	}
+    // GETTERS SETTERS
+    public String getName() {
+        return name;
+    }
 
-	public int getValue() {
-		return value;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setValue(int value) {
-		this.value = value;
-	}
-	
-	public float getSugar() {
-		return sugar;
-	}
+    public double getCalories() {
+        return calories;
+    }
 
-	public void setSugar(float sugar) {
-		this.sugar = sugar;
-	}
+    public void setCalories(double calories) {
+        this.calories = calories;
+    }
 
-	public int getSodium() {
-		return sodium;
-	}
+    public double getVitaminC() {return vitaminC;}
 
-	public void setSodium(int sodium) {
-		this.sodium = sodium;
-	}
+    public void setVitaminC(double vitaminC) { this.vitaminC = vitaminC; }
 
-	public float getProtein() {
-		return protein;
-	}
+    public double getVitaminK() {return vitaminK;}
 
-	public void setProtein(float protein) {
-		this.protein = protein;
-	}
+    public void setVitaminK(double vitaminK) { this.vitaminK = vitaminK; }
+
+    public double getProtein() {return protein;}
+
+    public void setProtein(double protein) { this.protein = protein; }
+
+    public double getSodium() {return sodium;}
+
+    public void setSodium(double sodium) { this.sodium = sodium; }
+
+    public double getSugar() {return sugar;}
+
+    public void setSugar(double sugar) { this.sugar = sugar; }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }
