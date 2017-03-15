@@ -140,10 +140,10 @@ public class ListBox extends JPanel {
         for (int i = 0; i < model.size(); i++) {
             totalCal += model.getElementAt(i).getCalories();
             totalViC += model.getElementAt(i).getVitaminC();
-            totalViK += model.getElementAt(i).getCalories();
-            totalPro += model.getElementAt(i).getVitaminC();
-            totalSod += model.getElementAt(i).getCalories();
-            totalSug += model.getElementAt(i).getVitaminC();
+            totalViK += model.getElementAt(i).geVitaminK();
+            totalPro += model.getElementAt(i).getProtein();
+            totalSod += model.getElementAt(i).getSodium();
+            totalSug += model.getElementAt(i).getSugar();
         }
         /*These values are WIP feel free to change them for balancing reasons.
         CALORIES
