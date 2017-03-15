@@ -1,5 +1,7 @@
 package eathealthy;
 
+import javax.swing.JOptionPane;
+
 public class UserInfo extends javax.swing.JFrame {
 
     /**
@@ -141,10 +143,20 @@ public class UserInfo extends javax.swing.JFrame {
         int age = jSlider1.getValue();
         String name = jTextField2.getText();
         String input = jTextField1.getText();
-        int weight = Integer.parseInt(input);
-        new User(name, weight, age, sex);
-        super.dispose();
-        new EatHealthy().start();
+        try{
+            int weight = Integer.parseInt(input);
+            User userinfo = new User(name, weight, age, sex);
+            super.dispose();
+            new EatHealthy().start();}
+        catch(IllegalArgumentException ex){
+            ex.getMessage();
+            String popupTxt = "<html><body width='220'>" + "<h1>Eat Healthy</h1>"
+                            + "<p>Please enter a valid weight!</p><br>";
+
+            // show how to play dialog on start
+	    JOptionPane.showMessageDialog(null, popupTxt);
+            
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
