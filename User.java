@@ -15,7 +15,13 @@ public class User {
     private int weeklyScore; //The current weekly score, can be stored here or by the game itself.
     //private boolean unlock[]; //Commented out until implemented.
 
-
+    public User(String name) {
+        this.name = name;
+        this.weeklyHighScore = 0;
+        this.dailyHighScore = 0;
+        this.totalScore = 0;
+    }
+    
     public User(String name, int weight, int age, boolean sex) {
         this.name = name;
         this.weight = weight;
