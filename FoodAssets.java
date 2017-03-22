@@ -36,6 +36,18 @@ public class FoodAssets {
         fm.addFood(new FoodObject("Orange", 69, 1, 12, 1.3f, -5, 5, 5));
         fm.addFood(new FoodObject("Fish Filet Sandwich", 374, 582, 5, 15.0f, -5, 5, 5));
         fm.addFood(new FoodObject("Mac and Cheese", 285, 714, 3, 13.0f, -5, 5, 5));
+	fm.addFood(new FoodObject("Strawberries", 46, 1, 7, 1f, 0, 0, 0));
+        fm.addFood(new FoodObject("Pizza Rolls", 262, 479, 3, 7.0f, 0, 0, 0));
+        fm.addFood(new FoodObject("Pepperoni Pizza Slice", 348, 876, 4.9f, 15.0f, 0, 0, 0));
+        fm.addFood(new FoodObject("Spinach", 23, 70, 0.4f, 3f, 0, 0, 0));
+        fm.addFood(new FoodObject("Lemon-Lime Soda", 232, 85, 61, 0, 0, 0, 0));
+        fm.addFood(new FoodObject("Pudding Cup", 153, 164, 19, 2.3f, 0, 0, 0));
+        fm.addFood(new FoodObject("Cereal Bar", 365, 354, 29, 4.2f, 0, 0, 0));
+        fm.addFood(new FoodObject("Pear", 116, 0, 19, 1.4f, 0, 0, 0));
+        fm.addFood(new FoodObject("Bologna Sandwich", 307, 922, 3.4f, 13f, 0, 0, 0));
+        fm.addFood(new FoodObject("Ham and Cheese Sandwich", 308, 925, 3.5f, 21, 0, 0, 0));
+        fm.addFood(new FoodObject("Potato Chips", 157, 52, 0, 1.9f, 0, 0, 0));
+        fm.addFood(new FoodObject("French Fries", 491, 607, 0.5f, 5.9f, 0, 0, 0));
     }
 
     public int getSize(){
