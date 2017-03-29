@@ -51,8 +51,8 @@ public class FoodAssets {
         fm.addFood(new FoodObject("Potato Chips", 157, 52, 0, 1.9f, 0, 0, 0));
         fm.addFood(new FoodObject("French Fries", 491, 607, 0.5f, 5.9f, 0, 0, 0));
 	fm.addFood(new FoodObject("Cottage Cheese", 206, 764, 5.6f, 23, 0, 0, 0));
-	fm.addFood(new FoodObject("Green Tea", 2, 2, 0f, 0.5f, 0));
-        fm.addFood(new FoodObject("Lemonade", 110, 14, 28.0f, 0, 1));
+	fm.addFood(new FoodObject("Green Tea", 2, 2, 0f, 0.5f, 0, 0, 0));
+        fm.addFood(new FoodObject("Lemonade", 110, 14, 28.0f, 0, 1, 0, 0));
     }
 
     public int getSize(){
