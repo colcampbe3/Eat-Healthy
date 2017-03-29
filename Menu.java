@@ -117,6 +117,9 @@ import javax.swing.JPanel;
                 handler.getGame().updateCalorieCounter();
                 handler.changeGameState(State.GAME);
             }
+            catch(FileNotFoundException f) {
+                //Remove unfound name from list of files
+                System.out.println("The File Could Not Be Found.");
             catch(Exception f) {
                 System.out.println("The File Could Not Be Loaded.");
             }
