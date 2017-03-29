@@ -1,19 +1,13 @@
-package eathealthy;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.awt.*;
-
-import static java.lang.Double.parseDouble;
+import javax.swing.JOptionPane;
 
 public class UserInfo extends javax.swing.JFrame {
 
+    private Handler handler;
     /**
      * Creates new form UserInfo
      */
-    public UserInfo() {
+    public UserInfo(Handler handler) {
+        this.handler = handler;
         initComponents();
     }
 
@@ -32,8 +26,7 @@ public class UserInfo extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
 
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setBackground(new java.awt.Color(0, 51, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         setFocusTraversalPolicyProvider(true);
@@ -51,20 +44,13 @@ public class UserInfo extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male", "Female" }));
 
-
         jButton1.setText("Done!");
         jButton1.setMaximumSize(new java.awt.Dimension(60, 22));
         jButton1.setMinimumSize(new java.awt.Dimension(60, 22));
         jButton1.setPreferredSize(new java.awt.Dimension(60, 22));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    jButton1ActionPerformed(evt);
-                }
-                catch(Exception e) {
-                    System.out.println("Something Went Wrong.");
-                    e.printStackTrace();
-                }
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -147,31 +133,32 @@ public class UserInfo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws FileNotFoundException, IOException, ClassNotFoundException {//GEN-FIRST:event_jButton1ActionPerformed
-        User profile;
-        try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(jTextField2.getText() + ".dat"));
-            profile = (User)in.readObject();
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String info = jComboBox1.getSelectedItem().toString();
+        boolean sex;
+        if(info == "Male")
+            sex = true;
+        else
+            sex = false;
+        int age = jSlider1.getValue();
+        String name = jTextField2.getText();
+        String input = jTextField1.getText();
+        try{
+            int weight = Integer.parseInt(input);
+            User userinfo = new User(name, weight, age, sex);
+            handler.getGame().createNewGame(userinfo);
             super.dispose();
-            new EatHealthy().start(profile);
+            handler.getGame().displayGameHelp(); // displays game tutorial pop up
         }
-        catch(Exception e) {
-            e.printStackTrace();
-            String info = jComboBox1.getSelectedItem().toString();
-            boolean sex;
-            if(info == "Male")
-                sex = true;
-            else
-                sex = false;
-            int age = jSlider1.getValue();
-            String name = jTextField2.getText();
-            String input = jTextField1.getText();
-            double weight = parseDouble(input);
-            profile = new User(name, weight, age, sex);
-            super.dispose();
-            new EatHealthy().start(profile); //Passes a reference of the User object to the main class. -R
-        }
+        catch(IllegalArgumentException ex){
+            ex.getMessage();
+            String popupTxt = "<html><body width='220'>" + "<h1>Eat Healthy</h1>"
+                    + "<p>Please enter a valid weight!</p><br>";
 
+            // show how to play dialog on start
+            JOptionPane.showMessageDialog(null, popupTxt);
+
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -202,11 +189,11 @@ public class UserInfo extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UserInfo().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new UserInfo().setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,16 +1,14 @@
-package eathealthy;
-
 
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,24 +20,51 @@ public class EatHealthy {
 
     public static final int WIDTH = 1024;
     public static final int HEIGHT = WIDTH / 12 * 9 + 20; // aspect ratio 12:9
-    // format
-    private String path = "res/background/fridge_closed.jpg";
-    private File f = new File(path);
 
-    private JButton addButton, removeButton, packLunchButton, randomButton;
+    private JPanel guiPanel, gamePanel;
+    private Handler handler;
+    private Menu menu;
+
+    private JButton addButton, removeButton, packLunchButton, randomButton, testSave, testReturn;
     private ListBox fridge, lunchBox;
     private FoodStatsPanel statsPanel;
     private Calendar day;
     private Window window;
-    private JLabel cal, pts, cap;
+    private JLabel cal, pts, cap, counter, goal;
     private User profile;
+//    private boolean newGame = false;
 
     private int calGoal = 1200;
 
     public static void main(String[] args) {
 
-        UserInfo user = new UserInfo();
-        user.setVisible(true);
+        // Sets theme
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(UserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(UserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(UserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(UserInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        // initializes a profile to avoid a null reference
+        User profile = new User("", 0, 0, false);
+
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new EatHealthy().start(profile);
+            }
+        });
 
     }
 
@@ -50,16 +75,7 @@ public class EatHealthy {
 
         // creates all food objects
         this.profile = newProfile;
-
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(profile.getName() + ".dat"));
-            out.writeObject(profile);
-            out.close();
-        }
-        catch(Exception e) {
-            System.out.println("The File Could Not Be Saved.");
-            e.printStackTrace();
-        }
+        handler = new Handler(this);
 
         FoodAssets.init();
 
@@ -67,7 +83,6 @@ public class EatHealthy {
         window = new Window(WIDTH, HEIGHT, "Eat Healthy");
         fridge = new ListBox(WIDTH - ListBox.DEFAULT_WIDTH - 10, 50, ListBox.DEFAULT_WIDTH, ListBox.DEFAULT_HEIGHT,
                 "FRIDGE");
-        fridge.fillRandom();
         lunchBox = new ListBox(10, 50, ListBox.DEFAULT_WIDTH, 190, "LUNCH BOX");
         lunchBox.setMaxCapacity(5);
 
@@ -77,10 +92,10 @@ public class EatHealthy {
 
         // creates calorie counter
         JPanel p = new JPanel();
-        JLabel counter = new JLabel("<HTML><U>Nutrition</U><HTML>", SwingConstants.CENTER);
-        JLabel goal = new JLabel("Calorie Goal: " + calGoal);
+        counter = new JLabel("<HTML><U>Nutrition</U><HTML>", SwingConstants.CENTER);
+        goal = new JLabel("Calorie Goal: " + calGoal);
         cal = new JLabel("Calories: " + lunchBox.getTotalCal());
-        pts = new JLabel("Points: " + lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex())); //Passes values to be used in calculation -R
+        pts = new JLabel("Points: " + lunchBox.getTotalPoints((double)profile.getWeight(),profile.getAge(), profile.getSex())); //Passes values to be used in calculation -R
         cap = new JLabel("Food: " + lunchBox.listSize() + " / " + lunchBox.getMaxCapacity());                           //This happens any time points are calculated.
         cap.setBackground(Color.GREEN);
 
@@ -92,31 +107,67 @@ public class EatHealthy {
         p.add(pts);
         p.add(cap);
 
-        // attach GUI components to window
-        window.getPanel().add(p);
-        window.getPanel().add(day.getField());
-        window.getPanel().add(statsPanel);
-        window.getPanel().add(fridge);
-        window.getPanel().add(lunchBox);
+        guiPanel = new JPanel(handler.getLayout());
+        menu = new Menu(WIDTH, HEIGHT, handler);
+
+        gamePanel = new JPanel();
+
+        gamePanel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        gamePanel.setMaximumSize(new Dimension(WIDTH, HEIGHT));
+        gamePanel.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        gamePanel.setLayout(null);
+        gamePanel.setOpaque(false); // sets background invisible
+
+        // attach components to panel
+        gamePanel.add(p);
+        gamePanel.add(day.getField());
+        gamePanel.add(statsPanel);
+        gamePanel.add(fridge);
+        gamePanel.add(lunchBox);
+
         createButtons();
 
-        loadBackgroundImage();
+        guiPanel.add(menu, State.MENU.toString());
+        guiPanel.add(gamePanel, State.GAME.toString());
+        guiPanel.setOpaque(false);
+
+        window.attach(guiPanel);
+        handler.changeGameState(State.MENU); // sets menu as starting game state
 
         // sets size & positioning for GUI components
         statsPanel.setBounds(WIDTH / 2 - (statsPanel.getWidth() / 2), HEIGHT / 2 - statsPanel.getHeight() / 2, statsPanel.getWidth(),
                 statsPanel.getHeight());
-        p.setBounds(removeButton.getX(), removeButton.getY() + removeButton.getHeight() + 10, 120, 90);
+        p.setBounds(removeButton.getX() - 10, removeButton.getY() + removeButton.getHeight() + 4, 140, 90);
 
         // must be called last or components won't be displayed
         window.getFrame().setVisible(true);
+    }
 
+    public void displayGameHelp(){
         String popupTxt = "<html><body width='220'>" + "<h1>Eat Healthy</h1>"
-                + "<p>Welcome to Eat Healthy. A game that simulates packing a lunch.</p><br>"
+                + "<p>Welcome " + profile.getName() + " to Eat Healthy. A game that simulates packing a lunch.</p><br>"
                 + "<p><u>How To Play:</u> &nbsp&nbsp Pick foods from the list on the right to pack into the lunch box."
                 + " Try picking an assortment of healthy foods to score big.</p>";
 
         // show how to play dialog on start
         JOptionPane.showMessageDialog(null, popupTxt);
+    }
+
+    public void createNewGame(User user){
+        setProfile(user);
+        fridge.fillRandom();
+        lunchBox.clearList();
+        setDay("Monday");
+        updateCalorieCounter(); // refreshes text info on calorie counter
+        handler.changeGameState(State.GAME);
+    }
+
+    public int getCalGoal(){
+        if(profile.getSex()){
+            return ((100 * profile.getAge() + 900) / 3);
+        } else {
+            return ((100 * profile.getAge() + 700) / 3);
+        }
     }
 
     public void createButtons() {
@@ -130,6 +181,37 @@ public class EatHealthy {
         removeButton = new JButton("Remove Food");
         packLunchButton = new JButton("Pack Lunch");
         randomButton = new JButton("Fill Random");
+        testSave = new JButton("Test Save");
+        testReturn = new JButton("Main Menu");
+
+        testSave.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                profile.storeFridge(fridge.getFoods());
+                profile.storeLunchBox(lunchBox.getFoods());
+                profile.setDay(day.getDay());
+                try {
+                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(profile.getName() + ".dat"));
+                    out.writeObject(profile);
+                    out.close();
+                }
+                catch(Exception e) {
+                    System.out.println("The File Could Not Be Saved.");
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+        testReturn.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                handler.changeGameState(State.MENU);
+            }
+
+        });
 
         // adds function to the add button
         addButton.addActionListener(new ActionListener() {
@@ -139,16 +221,7 @@ public class EatHealthy {
                     lunchBox.addItem(fridge.getSelectedItem());
                     fridge.removeSelectedItem();
 
-                    cal.setText("Calories: " + lunchBox.getTotalCal());
-                    pts.setText("Points: " + lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex()));
-
-                    // highlights food label if capacity reached
-                    if (lunchBox.listSize() == lunchBox.getMaxCapacity()) {
-                        cap.setOpaque(true);
-                    } else {
-                        cap.setOpaque(false);
-                    }
-                    cap.setText("Food: " + lunchBox.listSize() + " / " + lunchBox.getMaxCapacity());
+                    updateCalorieCounter();
                 }
             }
         });
@@ -160,16 +233,7 @@ public class EatHealthy {
                     fridge.addItem(lunchBox.getSelectedItem());
                     lunchBox.removeSelectedItem();
 
-                    cal.setText("Calories: " + lunchBox.getTotalCal());
-                    pts.setText("Points: " + lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex()));
-
-                    // highlights food label if capacity reached
-                    if (lunchBox.listSize() == lunchBox.getMaxCapacity()) {
-                        cap.setOpaque(true);
-                    } else {
-                        cap.setOpaque(false);
-                    }
-                    cap.setText("Food: " + lunchBox.listSize() + " / " + lunchBox.getMaxCapacity());
+                    updateCalorieCounter();
                 }
             }
         });
@@ -181,29 +245,10 @@ public class EatHealthy {
                 lunchBox.clearList();
                 if (day.isFriday()) {
                     fridge.fillRandom();
-                    try {
-                        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(profile.getName() + ".dat"));
-                        out.writeObject(profile);
-                        out.close();
-                    }
-                    catch(Exception f) {
-                        System.out.println("The File Could Not Be Saved");
-                    }
                 }
-                window.getPanel().remove(day.getField());
                 day.change();
-                window.getPanel().add(day.getField());
 
-                cal.setText("Calories: " + lunchBox.getTotalCal());
-                pts.setText("Points: " + lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex()));
-
-                // highlights food label if capacity reached
-                if (lunchBox.listSize() == lunchBox.getMaxCapacity()) {
-                    cap.setOpaque(true);
-                } else {
-                    cap.setOpaque(false);
-                }
-                cap.setText("Food: " + lunchBox.listSize() + " / " + lunchBox.getMaxCapacity());
+                updateCalorieCounter();
             }
         });
 
@@ -227,29 +272,64 @@ public class EatHealthy {
                 lunchBox.getY() + lunchBox.getHeight(), btnWidth, btnHeight);
         removeButton.setBackground(btnColor);
         removeButton.setForeground(Color.WHITE);
-        // randomButton.setBounds((WIDTH / 2) - (btnWidth / 2), HEIGHT / 2 +
-        // btnWidth, btnWidth, btnHeight);
 
-        window.getPanel().add(addButton);
-        window.getPanel().add(removeButton);
-        window.getPanel().add(packLunchButton);
+        testSave.setBounds(addButton.getX(), addButton.getY() + 100, btnWidth, btnHeight);
+        testReturn.setBounds(testSave.getX(), testSave.getY() + 50, btnWidth, btnHeight);
+
+        gamePanel.add(addButton);
+        gamePanel.add(removeButton);
+        gamePanel.add(packLunchButton);
+        gamePanel.add(testSave);
+        gamePanel.add(testReturn);
     }
 
-    public void loadBackgroundImage() {
-        // Checks if background image exists before showing
-        if (f.exists()) {
-            ImageIcon background = new ImageIcon(path);
-            JLabel label = new JLabel();
-            label.setBounds(0, 0, WIDTH, HEIGHT);
-            label.setIcon(background);
+    public void updateCalorieCounter(){
+        counter.setText("<HTML><U>"+ profile.getName() +"'s Nutrition</U><HTML>");
+        goal.setText("Calorie Goal: " + getCalGoal());
+        cal.setText("Calories: " + lunchBox.getTotalCal());
+        pts.setText("Points: " + lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex()));
 
-            JPanel panel = new JPanel();
-            panel.setLayout(null);
-            panel.add(label);
-
-            window.getPanel().add(panel);
-            panel.setBounds(0, 0, WIDTH, HEIGHT);
+        // highlights food label if capacity reached
+        if (lunchBox.listSize() == lunchBox.getMaxCapacity()) {
+            cap.setOpaque(true);
+        } else {
+            cap.setOpaque(false);
         }
+        cap.setText("Food: " + lunchBox.listSize() + " / " + lunchBox.getMaxCapacity());
     }
 
+    // GET & SET METHODS
+
+    public User getUser(){
+        return profile;
+    }
+
+    public void setProfile(User user){
+        profile = user;
+    }
+
+    public ListBox getFridge(){
+        return fridge;
+    }
+
+    public void setFridgeItems(ArrayList<FoodObject> foods){
+        fridge.setFoods(foods);
+    }
+
+    public ListBox getLunchBox(){
+        return lunchBox;
+    }
+
+    public void setLunchItems(ArrayList<FoodObject> foods){
+        lunchBox.setFoods(foods);
+    }
+
+    public void setDay(String day){
+        this.day.setDay(day);
+    }
+
+    public JPanel getGUIPanel(){
+        return guiPanel;
+    }
 }
+

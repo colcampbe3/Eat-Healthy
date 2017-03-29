@@ -1,5 +1,6 @@
-package eathealthy;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Rick on 3/8/2017.
@@ -16,6 +17,9 @@ public class User implements Serializable {
     private boolean sex; //false: female, true: male
     private int weeklyScore; //The current weekly score, can be stored here or by the game itself.
     //private boolean unlock[]; //Commented out until implemented.
+    private String day;
+    private ArrayList<FoodObject> fridge;
+    private ArrayList<FoodObject> lunchBox;
 
 
     public User(String name) {
@@ -53,6 +57,29 @@ public class User implements Serializable {
         if (score > dailyHighScore) {
             dailyHighScore = score;
         }
+    }
+
+    public void storeFridge(ArrayList<FoodObject> newFridge) {
+        this.fridge = newFridge;
+    }
+
+    public void storeLunchBox(ArrayList<FoodObject> newLunchBox) {
+        this.lunchBox = newLunchBox;
+    }
+
+    public ArrayList<FoodObject> getFridge() {
+        return this.fridge;
+    }
+
+    public ArrayList<FoodObject> getLunchBox() {
+        return this.lunchBox;
+    }
+
+    public String getDay() {
+        return this.day;
+    }
+    public void setDay(String newDay) {
+        this.day = newDay;
     }
 
     public int getDailyHigh() {
@@ -118,5 +145,4 @@ public class User implements Serializable {
     }
 
     */
-
 }
