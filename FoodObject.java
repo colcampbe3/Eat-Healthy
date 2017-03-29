@@ -1,6 +1,12 @@
-public class FoodObject {
+package eathealthy;
 
-    private String name;
+import java.io.Serializable;
+
+public class FoodObject implements Serializable {
+
+	private static final long serialVersionUID = 5568617105434570846L;
+	
+	private String name;
     private double calories;
     private double vitaminC;
     private double vitaminK;
