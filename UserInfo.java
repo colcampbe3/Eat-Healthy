@@ -4,10 +4,12 @@ import javax.swing.JOptionPane;
 
 public class UserInfo extends javax.swing.JFrame {
 
+	private Handler handler;
     /**
      * Creates new form UserInfo
      */
-    public UserInfo() {
+    public UserInfo(Handler handler) {
+    	this.handler = handler;
         initComponents();
     }
 
@@ -26,7 +28,7 @@ public class UserInfo extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setBackground(new java.awt.Color(0, 51, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         setFocusTraversalPolicyProvider(true);
@@ -146,8 +148,10 @@ public class UserInfo extends javax.swing.JFrame {
         try{
             int weight = Integer.parseInt(input);
             User userinfo = new User(name, weight, age, sex);
+            handler.getGame().createNewGame(userinfo);
             super.dispose();
-            new EatHealthy().start(userinfo);}
+            handler.getGame().displayGameHelp(); // displays game tutorial pop up
+            }
         catch(IllegalArgumentException ex){
             ex.getMessage();
             String popupTxt = "<html><body width='220'>" + "<h1>Eat Healthy</h1>"
@@ -158,7 +162,7 @@ public class UserInfo extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     /**
      * @param args the command line arguments
      */
@@ -187,11 +191,11 @@ public class UserInfo extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UserInfo().setVisible(true);
-            }
-        });
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new UserInfo().setVisible(true);
+//            }
+//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

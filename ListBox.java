@@ -15,7 +15,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+@SuppressWarnings("serial")
 public class ListBox extends JPanel {
+	
+	public enum Nutrient {
+		PROTEIN,
+		SUGAR,
+		VITAK,
+		VITAC,
+		SODIUM
+	};
 
 	public static final int DEFAULT_WIDTH = 250;
 	public static final int DEFAULT_HEIGHT = 300;
@@ -55,7 +64,7 @@ public class ListBox extends JPanel {
 	 * Configures and sets up all components in the list
 	 */
 	public void createList(){
-		itemList.setFont(new Font("Arial", Font.PLAIN, 20));
+		itemList.setFont(new Font("Arial", Font.PLAIN, 16));
 		itemList.setDragEnabled(true);
 
 		// Centers text in list
@@ -118,7 +127,29 @@ public class ListBox extends JPanel {
 
 		return totalCal;
 	}
+	
+	public double getTotal(Nutrient nutrient){
+		
+		double total = 0;
+		
+		for (int i = 0; i < model.size(); i++) {
+			if(nutrient == Nutrient.PROTEIN)
+				total += model.getElementAt(i).getProtein();
+			else if(nutrient == Nutrient.SODIUM)
+				total += model.getElementAt(i).getSodium();
+			else if(nutrient == Nutrient.SUGAR)
+				total += model.getElementAt(i).getSugar();
+			else if(nutrient == Nutrient.VITAC)
+				total += model.getElementAt(i).getVitaminC();
+			else if(nutrient == Nutrient.VITAK)
+				total += model.getElementAt(i).getVitaminK();
+			else
+				total += 0; // don't add anything
+		}
 
+		return total;
+	}
+	
 	public int getTotalPoints(double weight, int age, boolean sex) { //Passes values for use in calculation -R
 
         /* This method of point calculation gives flat amounts of points for meeting certain benchmarks
@@ -140,7 +171,7 @@ public class ListBox extends JPanel {
         for (int i = 0; i < model.size(); i++) {
             totalCal += model.getElementAt(i).getCalories();
             totalViC += model.getElementAt(i).getVitaminC();
-            totalViK += model.getElementAt(i).geVitaminK();
+            totalViK += model.getElementAt(i).getCalories();
             totalPro += model.getElementAt(i).getProtein();
             totalSod += model.getElementAt(i).getSodium();
             totalSug += model.getElementAt(i).getSugar();
@@ -317,6 +348,14 @@ public class ListBox extends JPanel {
 		}
 
 		return tempFoods;
+	}
+	
+	public void setFoods(ArrayList<FoodObject> foods){
+		clearList();
+		
+		for(FoodObject food : foods){
+			addItem(food);
+		}
 	}
 
 }

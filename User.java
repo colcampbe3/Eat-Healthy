@@ -1,13 +1,18 @@
 package eathealthy;
 
 import java.io.Serializable;
+
 /**
  * Created by Rick on 3/8/2017.
  * This is an object to store the information linked to the user profile with commands to set and retrieve the
  * information stored within.
  */
-public class User implements Serializable {
-    private String name;
+public class User implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7165837951626619805L;
+	private String name;
     private int weeklyHighScore;
     private int dailyHighScore;
     private int totalScore;
