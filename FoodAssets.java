@@ -57,6 +57,8 @@ public class FoodAssets {
         fm.addFood(new FoodObject("Caviar", 264, 1500, 0, 25, 0, 0, 0));
         fm.addFood(new FoodObject("Baked Potato", 246, 138, 2.2f, 8.6f, 0, 0, 0));
         fm.addFood(new FoodObject("Baked Beans", 121, 475, 0, 6.4f, 0, 0, 0));
+	fm.addFood(new FoodObject("Chocolate-Chip Cookies", 147, 158, 9.9f, 1.7f, 0, 0, 0));
+        fm.addFood(new FoodObject("Pistachios", 572, 6, 7.7f, 21, 0, 0, 0));
     }
 
     public int getSize(){
