@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
@@ -120,6 +121,7 @@ import javax.swing.JPanel;
             catch(FileNotFoundException f) {
                 //Remove unfound name from list of files
                 System.out.println("The File Could Not Be Found.");
+            }
             catch(Exception f) {
                 System.out.println("The File Could Not Be Loaded.");
             }
