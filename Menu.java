@@ -1,4 +1,6 @@
-
+/**
+ * Created by Rick on 3/29/2017.
+ */
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -7,12 +9,14 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
     @SuppressWarnings("serial")
@@ -104,9 +108,27 @@ import javax.swing.JPanel;
         private void contBtnOnClick(ActionEvent e){
             User profile;
             try {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream("Test" + ".dat"));
+            	// Looks thru save folder for any files ending in .dat using FilenameFilter and stores in a files array
+            	File[] files = new File("./saves").listFiles(new FilenameFilter() {
+					
+					@Override
+					public boolean accept(File dir, String name) {
+						// TODO Auto-generated method stub
+						return name.endsWith(".dat");
+					}
+				});
+            	
+            	for (File file : files) {
+            	    if (file.isFile()) {
+            	    	System.out.println(file.getName());
+            	    }
+            	}
+            	
+            	String filename = JOptionPane.showInputDialog("Enter name of file");
+            	
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream("./saves/" + filename + ".dat"));
                 profile = (User)in.readObject();
-                new EatHealthy().start(profile);
+//                new EatHealthy().start(profile);
                 // sets game components to values from save file
                 handler.getGame().getFridge().setFoods(profile.getFridge());
                 handler.getGame().getLunchBox().setFoods(profile.getLunchBox());
@@ -115,10 +137,6 @@ import javax.swing.JPanel;
 
                 handler.getGame().updateCalorieCounter();
                 handler.changeGameState(State.GAME);
-            }
-            catch(FileNotFoundException f) {
-                //Remove unfound name from list of files
-                System.out.println("The File Could Not Be Found.");
             }
             catch(Exception f) {
                 System.out.println("The File Could Not Be Loaded.");

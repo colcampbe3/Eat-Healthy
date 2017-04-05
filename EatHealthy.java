@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -192,7 +193,14 @@ public class EatHealthy {
                 profile.storeLunchBox(lunchBox.getFoods());
                 profile.setDay(day.getDay());
                 try {
-                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(profile.getName() + ".dat"));
+                	String path = "./saves/";
+                	File directory = new File(path);
+            		// create directory if it doesn't exist
+            		if(!directory.exists()){
+            			directory.mkdir();
+            			System.out.println("making directory " + directory.toString());
+            		}
+                    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path + profile.getName() + ".dat"));
                     out.writeObject(profile);
                     out.close();
                 }
