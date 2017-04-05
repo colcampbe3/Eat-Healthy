@@ -1,6 +1,4 @@
-/**
- * Created by Rick on 3/29/2017.
- */
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
