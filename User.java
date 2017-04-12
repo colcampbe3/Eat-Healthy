@@ -1,10 +1,13 @@
-package eathealthy;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * Created by Rick on 3/8/2017.
  * This is an object to store the information linked to the user profile with commands to set and retrieve the
  * information stored within.
  */
-public class User {
+public class User implements Serializable {
     private String name;
     private int weeklyHighScore;
     private int dailyHighScore;
@@ -14,9 +17,19 @@ public class User {
     private boolean sex; //false: female, true: male
     private int weeklyScore; //The current weekly score, can be stored here or by the game itself.
     //private boolean unlock[]; //Commented out until implemented.
+    private String day;
+    private ArrayList<FoodObject> fridge;
+    private ArrayList<FoodObject> lunchBox;
 
 
-    public User(String name, int weight, int age, boolean sex) {
+    public User(String name) {
+        this.name = name;
+        this.weeklyHighScore = 0;
+        this.dailyHighScore = 0;
+        this.totalScore = 0;
+    }
+
+    public User(String name, double weight, int age, boolean sex) {
         this.name = name;
         this.weight = weight;
         this.age = age;
@@ -44,6 +57,29 @@ public class User {
         if (score > dailyHighScore) {
             dailyHighScore = score;
         }
+    }
+
+    public void storeFridge(ArrayList<FoodObject> newFridge) {
+        this.fridge = newFridge;
+    }
+
+    public void storeLunchBox(ArrayList<FoodObject> newLunchBox) {
+        this.lunchBox = newLunchBox;
+    }
+
+    public ArrayList<FoodObject> getFridge() {
+        return this.fridge;
+    }
+
+    public ArrayList<FoodObject> getLunchBox() {
+        return this.lunchBox;
+    }
+
+    public String getDay() {
+        return this.day;
+    }
+    public void setDay(String newDay) {
+        this.day = newDay;
     }
 
     public int getDailyHigh() {
