@@ -1,142 +1,127 @@
-package eathealthy;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 public class FoodStatsPanel extends JPanel {
 
-	private int width = 500;
-	private int height = 200;
-	private int scale = 1;
+    private int width = 600;
+    private int height = 300;
+    private int scale = 1;
 
-	private Timer day;
-	private ListBox lunchbox;
-	private JTextArea textArea;
-//	private JLabel name;
-//	private JLabel calories;
-//	private JLabel points;
-	private JLabel header;
-	private Font font;
-	private Font font2;
+    private Calendar day;
+    private ListBox lunchbox;
+    private JTable table;
+    private DefaultTableModel model;
 
-	private String format = "  %-24s %6d %12d %12s";
-	private int totalCals;
-	private int totalPoints;
+    private JButton close;
+    private int totalCals, totalPoints, totalSodium;
+    private float totalSugar, totalProtein;
+    private int weekCounter = 1;
 
-	public FoodStatsPanel(Timer day, ListBox lunch) {
+    public FoodStatsPanel(Calendar day, ListBox lunch) {
 
-		this.day = day;
-		this.lunchbox = lunch;
+        this.day = day;
+        this.lunchbox = lunch;
 
-		font = new Font("Arial", Font.BOLD, 24 * scale);
-		font2 = new Font("monospaced", Font.PLAIN, 14 * scale); // need font that is mono-spaced in JTextArea or else won't align correctly
+//		font = new Font("Arial", Font.BOLD, 24 * scale);
+//		// need font to be mono-spaced or else won't align correctly in textArea
+//		font2 = new Font("monospaced", Font.PLAIN, 14 * scale);
 
-		textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setFont(font2);
-		
-		JScrollPane scrollText = new JScrollPane(textArea);
+        close = new JButton("Close");
 
-//		name = new JLabel("Name");
-//		calories = new JLabel("Calories");
-//		points = new JLabel("Points");
-		String heading = String.format("  %-15s %9s %10s %10s", "Name", "Calories", "Points", "Day");
-		header = new JLabel(heading);
+        String[] columns = { "Food", "Calories", "Sodium", "Sugar", "Protein", "Points", "Day" };
+        model = new DefaultTableModel(columns, 0);
+        table = new JTable(model);
 
-		// set fonts
-//		name.setFont(font);
-//		calories.setFont(font);
-//		points.setFont(font);
-		header.setFont(font);
-		
-		// set colors
-		setBackground(Color.black);
-//		name.setForeground(Color.green);
-		header.setForeground(Color.white);
-		textArea.setBackground(Color.white);
-		textArea.setForeground(Color.black);
+        // set alignment of columns
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        table.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+        table.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
 
-//		setLayout(null);
-		setLayout(new BorderLayout());
-		
-		add(header, BorderLayout.NORTH);
-		add(scrollText, BorderLayout.CENTER);
-//		add(textArea);
-		
-//		Insets insets = this.getInsets();
-//		header.setBounds(insets.left + 20, insets.top + 5, header.getPreferredSize().width, header.getPreferredSize().height);
-//		textArea.setBounds(insets.left, insets.top + 40, this.width, 400);
-		
-//		textArea.setPreferredSize(new Dimension(this.width, 400));
-//		scrollText.setBounds(insets.left, insets.top + 40, this.width, 180);
+        table.getTableHeader().setBackground(new Color(59, 89, 182));
+        table.getTableHeader().setForeground(Color.white);
 
-		setSize(width * scale, height * scale);
-		setPreferredSize(new Dimension(width * scale, height * scale));
-		setVisible(true);
-		
-		setBorder(BorderFactory.createLineBorder(Color.black));
-		// setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-	}
+        JScrollPane scrollText = new JScrollPane(table);
 
-	/*
-	 * Method that updates info being displayed on panel
-	 */
-	public void update() {
+        setLayout(new BorderLayout());
 
-		String tempFoodString = new String();
-		
-//		display();
-		
-		// clears panel and resets values at starting of the week
-		if (day.getField().getText().equals("Monday")) {
-			// clear text area
-			textArea.setText("");
-			totalPoints = 0;
-			totalCals = 0;
-		}
-		
-		for (FoodObject food : lunchbox.getFoods()) {
-			tempFoodString = String.format(format, food.getName(), food.getCalories(), food.getValue(), day.getField().getText().toString());
-			totalPoints += food.getValue();
-			totalCals += food.getCalories();
-			textArea.append(tempFoodString + "\n");
-		}
-		
-		// show totals after last day each week
-		if (day.getField().getText().equals("Friday")) {
-			textArea.append(String.format("\n  %-24s %6d\n", "Total Calories: ", totalCals));
-			textArea.append(String.format("  %-24s %6d\n", "Total Points: ", totalPoints));
-		}
-		
-//		ArrayList<FoodObject> food = lunchbox.getFoods();
-//		for (int i = 0; i < food.size(); i++) {
-//			String tempFoodString = new String(
-//					String.format("%-24s %8s %12s\n", food.get(i).getName(), food.get(i).getCalories(), food.get(i).getValue()));
-//
-//			textArea.append(tempFoodString);
-//		}
-	}
-	
-	public void display() {
+        add(scrollText, BorderLayout.CENTER);
+        add(close, BorderLayout.SOUTH);
 
-		if (day.isFriday()) {
-			setVisible(true);
-		} else {
-			setVisible(false);
-		}
-	}
-	
-	public void setScale(int num){
-		scale = num;
-	}
+        setSize(width * scale, height * scale);
+        setPreferredSize(new Dimension(width * scale, height * scale));
+        setVisible(false);
+
+        setBorder(BorderFactory.createLineBorder(Color.black));
+        // setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+
+        close.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+            }
+
+        });
+    }
+
+    /*
+     * Method that updates info being displayed on panel
+     */
+    public void update() {
+
+        display();
+
+        if(day.getField().getText().equals("Monday") && weekCounter > 1){
+            model.addRow(new Object[] {"","","","","","",""}); // blank row
+        }
+
+        for (FoodObject food : lunchbox.getFoods()) {
+            model.addRow(new Object[] { food.getName(), food.getCalories(), food.getSodium() + " mg", food.getSugar() + " g",
+                    food.getProtein() + " g", food.getValue(), day.getField().getText().toString() });
+            totalPoints += food.getValue();
+            totalCals += food.getCalories();
+            totalSodium += food.getSodium();
+            totalSugar += food.getSugar();
+            totalProtein += food.getProtein();
+        }
+
+        // show totals after last day each week
+        if (day.getField().getText().equals("Friday")) {
+            model.addRow(new Object[] {"","","","","","",""}); // blank row
+            model.addRow(new Object[]{"Week " + weekCounter + " Totals: ", totalCals, totalSodium + " mg", totalSugar + " g", totalProtein + " g", totalPoints});
+
+            weekCounter++;
+        }
+    }
+
+    public void display() {
+
+        if (day.isFriday()) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
+
+    public void setScale(int num) {
+        scale = num;
+    }
 }
