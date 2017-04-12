@@ -1,4 +1,3 @@
-package eathealthy;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,7 +22,7 @@ public class FoodStatsPanel extends JPanel {
 	private int height = 300;
 	private int scale = 1;
 
-	private eathealthy.Calendar day;
+	private Calendar day;
 	private ListBox lunchbox;
 	private JTable table;
 	private DefaultTableModel model;
@@ -33,7 +32,7 @@ public class FoodStatsPanel extends JPanel {
 	private float totalSugar, totalProtein;
 	private int weekCounter = 1;
 
-	public FoodStatsPanel(eathealthy.Calendar day, ListBox lunch) {
+	public FoodStatsPanel(Calendar day, ListBox lunch) {
 
 		this.day = day;
 		this.lunchbox = lunch;

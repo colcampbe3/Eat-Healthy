@@ -1,4 +1,3 @@
-package eathealthy;
 
 import javax.swing.JOptionPane;
 
