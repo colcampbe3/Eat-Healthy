@@ -143,8 +143,10 @@ public class UserInfo extends javax.swing.JFrame {
         int age = jSlider1.getValue();
         String name = jTextField2.getText();
         String input = jTextField1.getText();
+        System.out.println(input);
+        int weight = Integer.parseInt(input);
         try{
-            int weight = Integer.parseInt(input);
+
             User userinfo = new User(name, weight, age, sex);
             handler.getGame().createNewGame(userinfo);
             super.dispose();

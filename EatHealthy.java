@@ -156,7 +156,7 @@ public class EatHealthy {
 
     public void createNewGame(User user){
         setProfile(user);
-        fridge.fillRandom();
+        fridge.fillRandom(profile.getUnlock());
         lunchBox.clearList();
         setDay("Monday");
         updateCalorieCounter(); // refreshes text info on calorie counter
@@ -228,7 +228,7 @@ public class EatHealthy {
                         && lunchBox.listSize() < lunchBox.getMaxCapacity()) {
                     lunchBox.addItem(fridge.getSelectedItem());
                     fridge.removeSelectedItem();
-
+                    System.out.println("Bob is " + profile.getAge() + " years old");
                     updateCalorieCounter();
                 }
             }
@@ -252,7 +252,15 @@ public class EatHealthy {
                 statsPanel.update();
                 lunchBox.clearList();
                 if (day.isFriday()) {
-                    fridge.fillRandom();
+                    profile.setTotalScore(lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex()) + profile.getTotalScore());
+                    float score = profile.getTotalScore();
+                    if (score >= 100 & score < 500) {
+                        profile .setUnlock(45);
+                    } else if (score >= 500) {
+                        profile.setUnlock(48);
+                    }
+                    fridge.fillRandom(profile.getUnlock());
+
                 }
                 day.change();
 
@@ -263,7 +271,7 @@ public class EatHealthy {
         // adds function to the fill random button
         randomButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                fridge.fillRandom();
+                fridge.fillRandom(profile.getUnlock());
                 lunchBox.clearList();
             }
         });
@@ -295,7 +303,7 @@ public class EatHealthy {
         counter.setText("<HTML><U>"+ profile.getName() +"'s Nutrition</U><HTML>");
         goal.setText("Calorie Goal: " + getCalGoal());
         cal.setText("Calories: " + lunchBox.getTotalCal());
-        pts.setText("Points: " + lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex()));
+        pts.setText("Points: " + Math.round(100* lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex())));
 
         // highlights food label if capacity reached
         if (lunchBox.listSize() == lunchBox.getMaxCapacity()) {

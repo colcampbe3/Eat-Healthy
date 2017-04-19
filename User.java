@@ -11,12 +11,12 @@ public class User implements Serializable {
     private String name;
     private int weeklyHighScore;
     private int dailyHighScore;
-    private int totalScore;
+    private float totalScore;
     private double weight;
     private int age;
     private boolean sex; //false: female, true: male
     private int weeklyScore; //The current weekly score, can be stored here or by the game itself.
-    //private boolean unlock[]; //Commented out until implemented.
+    private int unlock; //Commented out until implemented.
     private String day;
     private ArrayList<FoodObject> fridge;
     private ArrayList<FoodObject> lunchBox;
@@ -27,6 +27,7 @@ public class User implements Serializable {
         this.weeklyHighScore = 0;
         this.dailyHighScore = 0;
         this.totalScore = 0;
+        this.unlock = 40;
     }
 
     public User(String name, double weight, int age, boolean sex) {
@@ -34,6 +35,7 @@ public class User implements Serializable {
         this.weight = weight;
         this.age = age;
         this.sex = sex;
+        this.unlock = 40;
         this.weeklyHighScore = 0;
         this.dailyHighScore = 0;
         this.totalScore = 0;
@@ -86,7 +88,7 @@ public class User implements Serializable {
         return this.dailyHighScore;
     }
 
-    public void setTotalScore(int score) { //directly change the total
+    public void setTotalScore(float score) { //directly change the total
         this.totalScore = score;
     }
 
@@ -94,7 +96,7 @@ public class User implements Serializable {
         this.totalScore = this.totalScore + score;
     }
 
-    public int getTotalScore() {
+    public float getTotalScore() {
         return this.totalScore;
     }
 
@@ -134,15 +136,13 @@ public class User implements Serializable {
         return this.weeklyScore;
     }
 
-    /*
 
-    public void setUnlock(int index,boolean status) {
-        this.unlock[index] = status;
+    public void setUnlock(int unlock) {
+        this.unlock = unlock;
     }
 
-    public boolean getUnlock(int index) {
-        return this.unlock[index];
+    public int getUnlock() {
+        return this.unlock;
     }
 
-    */
 }
