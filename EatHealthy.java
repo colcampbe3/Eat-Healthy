@@ -1,5 +1,5 @@
 
-
+   
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -28,10 +28,9 @@ public class EatHealthy {
 
     private JButton addButton, removeButton, packLunchButton, randomButton, testSave, testReturn;
     private ListBox fridge, lunchBox;
-    private FoodStatsPanel statsPanel;
     private Calendar day;
     private Window window;
-    private JLabel cal, pts, cap, counter, goal;
+    private JLabel cal, pts, cap, counter, goal, scoreBoard, highScore;
     private User profile;
 //    private boolean newGame = false;
 
@@ -88,9 +87,17 @@ public class EatHealthy {
         lunchBox.setMaxCapacity(5);
 
         day = new Calendar();
-
-        statsPanel = new FoodStatsPanel(this.day, lunchBox);
-
+        
+        //points panel initialization
+        JPanel z = new JPanel();
+        z.setBackground(Color.ORANGE);
+        scoreBoard = new JLabel("SCORE: " + profile.getWeeklyScore());
+        highScore = new JLabel("HIGHSCORE: " + profile.getWeeklyHigh());
+        z.setLayout(new BoxLayout(z, BoxLayout.Y_AXIS));
+        z.setBorder(new EmptyBorder(4, 4, 4, 4));
+        z.add(scoreBoard);
+        z.add(highScore);
+        z.setBounds(300, 5, 380, 60);
         // creates calorie counter
         JPanel p = new JPanel();
         counter = new JLabel("<HTML><U>Nutrition</U><HTML>", SwingConstants.CENTER);
@@ -107,7 +114,7 @@ public class EatHealthy {
         p.add(cal);
         p.add(pts);
         p.add(cap);
-
+        
         guiPanel = new JPanel(handler.getLayout());
         menu = new Menu(WIDTH, HEIGHT, handler);
 
@@ -122,9 +129,10 @@ public class EatHealthy {
         // attach components to panel
         gamePanel.add(p);
         gamePanel.add(day.getField());
-        gamePanel.add(statsPanel);
         gamePanel.add(fridge);
         gamePanel.add(lunchBox);
+        //points
+        gamePanel.add(z);
 
         createButtons();
 
@@ -135,9 +143,7 @@ public class EatHealthy {
         window.attach(guiPanel);
         handler.changeGameState(State.MENU); // sets menu as starting game state
 
-        // sets size & positioning for GUI components
-        statsPanel.setBounds(WIDTH / 2 - (statsPanel.getWidth() / 2), HEIGHT / 2 - statsPanel.getHeight() / 2, statsPanel.getWidth(),
-                statsPanel.getHeight());
+        // sets size & positioning for GUI component
         p.setBounds(removeButton.getX() - 10, removeButton.getY() + removeButton.getHeight() + 4, 140, 90);
 
         // must be called last or components won't be displayed
@@ -249,10 +255,17 @@ public class EatHealthy {
         // adds function to the pack lunch button
         packLunchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                statsPanel.update();
+                profile.setWeeklyScore(profile.getWeeklyScore() 
+                        + lunchBox.getTotalPoints((double)profile.getWeight(), 
+                                profile.getAge(), profile.getSex()));
                 lunchBox.clearList();
+                scoreBoard.setText("SCORE: " + profile.getWeeklyScore());
                 if (day.isFriday()) {
                     fridge.fillRandom();
+                    profile.setWeeklyHigh(profile.getWeeklyScore());
+                    profile.setWeeklyScore(0);
+                    highScore.setText("HIGHSCORE: " + profile.getWeeklyHigh());
+                    scoreBoard.setText("SCORE: " + profile.getWeeklyScore());
                 }
                 day.change();
 
@@ -296,7 +309,7 @@ public class EatHealthy {
         goal.setText("Calorie Goal: " + getCalGoal());
         cal.setText("Calories: " + lunchBox.getTotalCal());
         pts.setText("Points: " + lunchBox.getTotalPoints(profile.getWeight(),profile.getAge(), profile.getSex()));
-
+        
         // highlights food label if capacity reached
         if (lunchBox.listSize() == lunchBox.getMaxCapacity()) {
             cap.setOpaque(true);
@@ -340,4 +353,5 @@ public class EatHealthy {
         return guiPanel;
     }
 }
+
 
