@@ -1,5 +1,4 @@
 
-
 public class FoodAssets {
 
     public static FoodManager fm = new FoodManager();
@@ -60,7 +59,7 @@ public class FoodAssets {
 
     }
 
-    public int getSize(){
+    public static int getSize(){
         return fm.getFoods().size();
     }
 }

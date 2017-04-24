@@ -271,7 +271,6 @@ public class ListBox extends JPanel {
         }
         return totalPoints;
     }
-
     /*
      * Method that fills list with random food items
      */

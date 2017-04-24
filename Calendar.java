@@ -11,6 +11,8 @@ public class Calendar {
     public Calendar(){
         dayLabel = new JLabel("Monday");
         dayLabel.setFont(new Font("arial", Font.BOLD, 16));
+//        dayLabel.setBorder(new EmptyBorder(5,5,5,5));
+//        dayLabel.setBackground(Color.white);
         this.set();
     }
     //constructor, sets timer to monday, calls a function to set the size and locaton

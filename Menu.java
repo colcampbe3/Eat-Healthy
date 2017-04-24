@@ -9,12 +9,14 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,6 +28,9 @@ import javax.swing.JPanel;
         private int width, height;
         private UserInfo userInfo;
         private Handler handler;
+        private BufferedImage background;
+        private String path = "/background/title_screen.jpg";
+        private File f = new File("res" + path);
 
         public Menu(int width, int height, Handler handler){
 
@@ -104,7 +109,6 @@ import javax.swing.JPanel;
 
         }
 
-        @SuppressWarnings("unchecked")
         private void contBtnOnClick(ActionEvent e){
             User profile;
             try {
@@ -118,13 +122,25 @@ import javax.swing.JPanel;
 					}
 				});
             	
+            	// gets a list of filenames to display for user when entering a filename
+            	String fileNames = null;
             	for (File file : files) {
             	    if (file.isFile()) {
+            	    	if(fileNames == null)
+            	    		fileNames = file.getName();
+            	    	else
+            	    		fileNames = fileNames.concat("\n" + file.getName());
             	    	System.out.println(file.getName());
             	    }
             	}
+            	System.out.println("fileNames: " + fileNames);
+            	String filename = JOptionPane.showInputDialog("Enter name of file:\n " + fileNames);
             	
-            	String filename = JOptionPane.showInputDialog("Enter name of file");
+            	// truncates input if user entered .dat in filename
+            	if(filename.endsWith(".dat")){
+            		filename = filename.substring(0, filename.length() - 4);
+            		System.out.println(filename);
+            	}
             	
                 ObjectInputStream in = new ObjectInputStream(new FileInputStream("./saves/" + filename + ".dat"));
                 profile = (User)in.readObject();
@@ -137,6 +153,7 @@ import javax.swing.JPanel;
 
                 handler.getGame().updateCalorieCounter();
                 handler.changeGameState(State.GAME);
+                in.close();
             }
             catch(Exception f) {
                 System.out.println("The File Could Not Be Loaded.");
@@ -146,12 +163,29 @@ import javax.swing.JPanel;
         @Override
         public void paintComponent(Graphics g){
             super.paintComponent(g);
-            Font fnt = new Font("arial", 1, 50);
+            Font fnt = new Font("arial", Font.BOLD, 50);
             g.setFont(fnt);
             g.setColor(Color.black);
             g.fillRect(0, 0, width, height);
+            
+            // load image only if file exists and build path is set for image folder
+            if (f.exists() && getClass().getResource(path) != null) {
+                try {
+                    background = ImageIO.read(getClass().getResource(path));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
 
+                if (background != null) {
+                    g.drawImage(background, 0, 0, null);
+                }
+            }
+//            g.setColor(Color.black);
+//            g.setFont(new Font("arial", Font.BOLD, 52));
+//            g.drawString("Eat Healthy", width/2 - 130 - 2, 180 + 2);
             g.setColor(Color.white);
+            g.setFont(fnt);
             g.drawString("Eat Healthy", width/ 2 - 130, 180);
         }
 

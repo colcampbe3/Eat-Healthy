@@ -142,6 +142,32 @@ public class User implements Serializable {
     }
 
     public int getUnlock() {
+        
+        if(weeklyHighScore > 2000){
+            
+        }else if(weeklyHighScore > 1950){
+            unlock = 51;
+        }else if(weeklyHighScore > 1930){
+            unlock = 50;
+        }else if(weeklyHighScore > 1900){
+            unlock = 49;
+        }else if(weeklyHighScore > 1850){
+            unlock = 48;
+        }else if(weeklyHighScore > 1800){
+            unlock = 47;
+        }else if(weeklyHighScore > 1700){
+            unlock = 46;
+        }else if(weeklyHighScore > 1600){
+            unlock = 45;
+        }else if(weeklyHighScore > 1500){
+            unlock = 44;
+        }else if(weeklyHighScore > 1250){
+            unlock = 43;
+        }else if(weeklyHighScore > 1000){
+            unlock = 42;
+        }else if(weeklyHighScore > 500){
+            unlock = 41;
+        }else unlock = 40;
         return this.unlock;
     }
 

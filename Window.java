@@ -44,8 +44,8 @@ public class Window {
             protected void paintComponent(Graphics g) {
 
                 super.paintComponent(g);
-                // load image only if file exists
-                if (f.exists()) {
+                // load image only if file exists and build path is set for image folder
+                if (f.exists() && getClass().getResource(path) != null) {
                     try {
                         background = ImageIO.read(getClass().getResource(path));
                     } catch (IOException e) {
