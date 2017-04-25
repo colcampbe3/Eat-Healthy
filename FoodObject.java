@@ -12,7 +12,10 @@ public class FoodObject implements Serializable {
     private double sugar;
     private int value;
 
-    public FoodObject(String name, double cal, double vitC, double vitK, double pro, double sod, double sug, int val){
+    // From FoodAssets
+    // FoodObject(name, calories, sodium, sugar, protein, points)
+//    public FoodObject(String name, double cal, double vitC, double vitK, double pro, double sod, double sug, int val){
+    public FoodObject(String name, double cal, double sod, double sug, double pro, int val, double vitC, double vitK){
         this.name = name;
         this.calories = cal;
         this.vitaminC = vitC;

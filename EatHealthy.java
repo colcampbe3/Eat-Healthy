@@ -377,5 +377,13 @@ public class EatHealthy {
     public JPanel getGUIPanel(){
         return guiPanel;
     }
+
+	public void setScore(int weeklyScore) {
+		scoreBoard.setText(Integer.toString(weeklyScore));
+	}
+
+	public void setHighScore(int weeklyHigh) {
+		highScore.setText(Integer.toString(weeklyHigh));
+	}
 }
 

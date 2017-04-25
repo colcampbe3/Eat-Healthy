@@ -161,6 +161,8 @@ import javax.swing.JPanel;
                 handler.getGame().setProfile(profile);
                 handler.getGame().setDay(profile.getDay());
 
+                handler.getGame().setScore(profile.getWeeklyScore());
+                handler.getGame().setHighScore(profile.getWeeklyHigh());
                 handler.getGame().updateCalorieCounter();
                 handler.changeGameState(State.GAME);
                 in.close();
