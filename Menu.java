@@ -112,6 +112,7 @@ import javax.swing.JPanel;
         private void contBtnOnClick(ActionEvent e){
             User profile;
             try {
+            	
             	// Looks thru save folder for any files ending in .dat using FilenameFilter and stores in a files array
             	File[] files = new File("./saves").listFiles(new FilenameFilter() {
 					
@@ -122,24 +123,33 @@ import javax.swing.JPanel;
 					}
 				});
             	
-            	// gets a list of filenames to display for user when entering a filename
-            	String fileNames = null;
-            	for (File file : files) {
-            	    if (file.isFile()) {
-            	    	if(fileNames == null)
-            	    		fileNames = file.getName();
-            	    	else
-            	    		fileNames = fileNames.concat("\n" + file.getName());
-            	    	System.out.println(file.getName());
-            	    }
-            	}
-            	System.out.println("fileNames: " + fileNames);
-            	String filename = JOptionPane.showInputDialog("Enter name of file:\n " + fileNames);
+            	// exit method if no files found
+            	if(!(files.length > 0)){
+        			JOptionPane.showMessageDialog(this, "No save files found.");
+        			return;
+        		}
             	
-            	// truncates input if user entered .dat in filename
-            	if(filename.endsWith(".dat")){
-            		filename = filename.substring(0, filename.length() - 4);
-            		System.out.println(filename);
+            	// gets a list of filenames to display for user when entering a filename
+            	String[] fileNames = new String[files.length]; 
+            	for(int i = 0; i < files.length; i++){
+            		File file = files[i];
+            		if(file.isFile()){
+            			fileNames[i] = file.getName().substring(0, file.getName().length() - 4);
+            		}
+            	}
+            	
+            	String filename = (String)JOptionPane.showInputDialog(this, 
+            			"Select Save File:", 
+            			"Open File", 
+            			JOptionPane.PLAIN_MESSAGE, 
+            			null, 
+            			fileNames, 
+            			fileNames[0]);
+            	
+            	
+            	// exit if no filename selected
+            	if(filename == null || filename.length() <= 0){
+            		return;
             	}
             	
                 ObjectInputStream in = new ObjectInputStream(new FileInputStream("./saves/" + filename + ".dat"));
@@ -156,6 +166,7 @@ import javax.swing.JPanel;
                 in.close();
             }
             catch(Exception f) {
+            	JOptionPane.showMessageDialog(this, "No save files found.");
                 System.out.println("The File Could Not Be Loaded.");
             }
         }
@@ -181,12 +192,6 @@ import javax.swing.JPanel;
                     g.drawImage(background, 0, 0, null);
                 }
             }
-//            g.setColor(Color.black);
-//            g.setFont(new Font("arial", Font.BOLD, 52));
-//            g.drawString("Eat Healthy", width/2 - 130 - 2, 180 + 2);
-            g.setColor(Color.white);
-            g.setFont(fnt);
-            g.drawString("Eat Healthy", width/ 2 - 130, 180);
         }
 
         // GET & SET METHODS
