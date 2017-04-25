@@ -1,5 +1,6 @@
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class FoodObject implements Serializable {
 
     private String name;

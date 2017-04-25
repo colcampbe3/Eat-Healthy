@@ -1,5 +1,6 @@
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("serial")
 public class UserInfo extends javax.swing.JFrame {
 
     private Handler handler;
@@ -11,7 +12,6 @@ public class UserInfo extends javax.swing.JFrame {
         initComponents();
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

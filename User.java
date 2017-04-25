@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * This is an object to store the information linked to the user profile with commands to set and retrieve the
  * information stored within.
  */
+@SuppressWarnings("serial")
 public class User implements Serializable {
     private String name;
     private int weeklyHighScore;
