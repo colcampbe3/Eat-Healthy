@@ -54,7 +54,9 @@ public class UserInfo extends javax.swing.JFrame {
             }
         });
 
-        jSlider1.setMajorTickSpacing(10);
+        jSlider1.setMajorTickSpacing(1);
+        jSlider1.setMinimum(9);
+        jSlider1.setMaximum(12);
         jSlider1.setMinorTickSpacing(1);
         jSlider1.setPaintLabels(true);
         jSlider1.setPaintTicks(true);
