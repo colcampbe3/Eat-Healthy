@@ -10,7 +10,7 @@ public class Calendar {
 
     public Calendar(){
         dayLabel = new JLabel("Monday");
-        dayLabel.setFont(new Font("arial", Font.BOLD, 16));
+        dayLabel.setFont(new Font("impact", Font.PLAIN, 24));
 //        dayLabel.setBorder(new EmptyBorder(5,5,5,5));
 //        dayLabel.setBackground(Color.white);
         this.set();
@@ -38,13 +38,15 @@ public class Calendar {
 //            jtf = new JTextField("Monday");
             dayLabel.setText("Monday");
         }
+        
+//        dayLabel.setText(dayLabel.getText().toUpperCase());
 //        jtf.setEditable(false);
 //        this.set();
     }
     //increments timer forward by one day and friday back to monday
 
     public void set(){
-        dayLabel.setBounds(10, 10, 90, 30);
+        dayLabel.setBounds(EatHealthy.WIDTH/2 - 30, 10, 130, 30);
     }
     //sets location and size of timer
 
