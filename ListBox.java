@@ -150,7 +150,7 @@ public class ListBox extends JPanel {
         return total;
     }
 
-    public int getTotalPoints(double weight, int age, boolean sex) { //Passes values for use in calculation -R
+    public float getTotalPoints(double weight, int age, boolean sex) { //Passes values for use in calculation -R
 
         /* This method of point calculation gives flat amounts of points for meeting certain benchmarks
          This means there is a maxnumber of points that can be earned in an single day and by extension a single week.
@@ -161,7 +161,7 @@ public class ListBox extends JPanel {
 
 
 
-        int totalPoints = 0;
+        float totalPoints = 0;
         int totalCal = 0;
         int totalViC = 0;
         int totalViK = 0;
@@ -184,38 +184,49 @@ public class ListBox extends JPanel {
         If total Calories is within 100 points of the recommended value you get 100 points
         Otherwise if it's within 200 points you get 50. -R      */
         if (sex) {
-            if ( Math.abs(totalCal - (((100*age) + 900)/3)) <= 100) {
-                totalPoints += 100;
+            if (totalCal <= 0) {
+                totalPoints += 0;
             }
-            else if( Math.abs(totalCal - (((100*age) + 900)/3)) <= 200) {
-                totalPoints += 50;
+            else if(totalCal > (((float)(100*age) + 900)/3) & totalCal < (2 * (((float)(100*age) + 900)/3))) {
+                totalPoints += (-1 * ((float)100 / ((float)((100 * age) + 900) / 3))) * (totalCal - (2 * (float)((100 * age) + 900) / 3));
+            } else if(totalCal >= (2 * (((float)(100*age) + 900)/3))) {
+                totalPoints += 0;
+            } else {
+                totalPoints += ((float)100/((float)((100*age) + 900)/3)) * totalCal;
             }
         }
         else {
-            if ( Math.abs(totalCal - (((100*age) + 700)/3)) <= 100) {
-                totalPoints += 100;
+            if (totalCal <= 0 | totalCal > 2 * ((float)((100*age) + 700)/3)) {
+                totalPoints += 0;
             }
-            else if( Math.abs(totalCal - (((100*age) + 700)/3)) <= 200) {
-                totalPoints += 50;
+            else if(totalCal > ((float)((100*age) + 700)/3)) {
+                totalPoints += (-1 * ((float)100/((float)((100*age) + 700)/3))) * (totalCal - (2*(float)((100*age) + 700)/3));
+            } else {
+                totalPoints += ((float)100/((float)((100*age) + 700)/3)) * totalCal;
             }
         }
         //SODIUM - 1500mg Daily
         //If total Sodium is within 100mgs of recommended value divided by three you get 100 points
         //Otherwise if it's within 200mgs you get 50 points. -R
-        if ( Math.abs(totalSod - 500) <= 100) {
-            totalPoints += 100;
+        if (totalSod <= 0 | totalSod > (2 * 500)) {
+            totalPoints += 0;
         }
-        else if ( Math.abs(totalSod - 500) <= 200) {
-            totalPoints += 50;
+        else if(totalSod > 500) {
+            totalPoints += (-1 * ((float)100 / 500)) * (totalSod - 1000);
+        }
+        else {
+            totalPoints += ((float)100/500) * totalSod;
         }
         //SUGAR - 30g Daily
         //If total Sugar is within 3gs of recommended value divided by three you get 100 points
         //Otherwise if it's within 5gs you get 50 points. -R
-        if ( Math.abs(totalSug - 10) <= 3) {
-            totalPoints += 100;
+        if (totalSug <= 0 | totalSug > (2 * 10)) {
+            totalPoints += 0;
         }
-        else if ( Math.abs(totalSug - 10) <= 5) {
-            totalPoints += 50;
+        else if(totalSug > 10) {
+            totalPoints += (-1 * ((float)100/10)) * (totalSug - 20);
+        } else {
+            totalPoints += ((float)100/10) * totalSug;
         }
         /* Protein
             (weight * .45g) / 3 <-- This is the daily recommended amount of protien divided by three.
@@ -223,21 +234,25 @@ public class ListBox extends JPanel {
             Full points is within 80% of daily value
             Half points is within 65% of daily value
             -R
-         */
-        if ( Math.abs((totalPro - ((weight *.45)/3))) <= (weight * .36)/3) {
-            totalPoints += 100;
+         */ 
+        if (totalPro <= 0 | totalPro > (2 * ((float)(weight * 0.45f)/3))) {
+            totalPoints += 0;
         }
-        else if ( (totalPro - ((weight *.45)/3)) <= (weight * .29)/3) {
-            totalPoints += 50;
+        else if(totalPro > ((float)(weight * 0.45f)/3)) {
+            totalPoints += (-1 * ((float)(weight * 0.45f)/3)) * (totalPro - (2 * (float)(weight * 0.45f)/3));
+        } else {
+            totalPoints += ((float)(weight * 0.45f)/3) * totalPro;
         }
         //Vitamin C - 45mg Daily
         //If total Vitamin C is above 100% of recommended value divided by three you get 100 points
         //Otherwise if it's above 90% you get 50 points. -R
-        if ( totalViC/15 >= 1) {
-            totalPoints += 100;
+        /*if (totalViC <= 0) {
+            totalPoints += 0;
         }
-        else if ( totalViC >= .9) {
-            totalPoints += 50;
+        else if(totalViC >= 15) {
+            totalPoints += 100;
+        } else {
+            totalPoints += (100 / 15) * totalViC;
         }
         /*Vitamin K - 0.006mg Daily 0r 60mcg (MicroGrams)
             If total Vitam C is above 100% of recommended value divided by three you get 100 points
@@ -246,19 +261,21 @@ public class ListBox extends JPanel {
              if this turns ot to be to difficult to track it can be removed.
              -R
         */
-        if ( totalViK/0.002 >= 1) {
+       /*if (totalViK <= 0) {
+            totalPoints += 0;
+        }
+        else if(totalViK >= 0.002) {
             totalPoints += 100;
-        }
-        else if ( totalViK/0.0018 >= .9) {
-            totalPoints += 50;
-        }
+        } else {
+            totalPoints += (100/.002) * totalViK;
+        }*/
         return totalPoints;
     }
 
     /*
      * Method that fills list with random food items
      */
-    public void fillRandom() {
+    public void fillRandom(int upperBound) {
         Random r = new Random();
         int randNum;
         ArrayList<FoodObject> tempFoodList = new ArrayList<FoodObject>();
@@ -270,9 +287,10 @@ public class ListBox extends JPanel {
         }
 
         // randomly take items
-        for (int i = 0; i < FoodAssets.getSize(); i++) {
-            randNum = r.nextInt(tempFoodList.size());
+        for (int i = 0; i < 20; i++) {
+            randNum = r.nextInt(upperBound);
             // System.out.println(randNum);
+            upperBound--;
             tempFoodList2.add(tempFoodList.get(randNum));
             tempFoodList.remove(randNum);
 

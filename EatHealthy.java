@@ -32,6 +32,7 @@ public class EatHealthy {
     private Window window;
     private JLabel cal, pts, cap, counter, goal, scoreBoard, highScore;
     private User profile;
+    private FoodStatsPanel fsp;
 //    private boolean newGame = false;
 
     private int calGoal = 1200;
@@ -87,6 +88,7 @@ public class EatHealthy {
         lunchBox.setMaxCapacity(5);
 
         day = new Calendar();
+        fsp = new FoodStatsPanel(day, lunchBox);
         
         //points panel initialization
         JPanel z = new JPanel();
@@ -162,7 +164,7 @@ public class EatHealthy {
 
     public void createNewGame(User user){
         setProfile(user);
-        fridge.fillRandom();
+        fridge.fillRandom(profile.getUnlock());
         lunchBox.clearList();
         setDay("Monday");
         updateCalorieCounter(); // refreshes text info on calorie counter
@@ -188,7 +190,7 @@ public class EatHealthy {
         removeButton = new JButton("Remove Food");
         packLunchButton = new JButton("Pack Lunch");
         randomButton = new JButton("Fill Random");
-        testSave = new JButton("Test Save");
+        testSave = new JButton("Save");
         testReturn = new JButton("Main Menu");
 
         testSave.addActionListener(new ActionListener(){
@@ -246,7 +248,7 @@ public class EatHealthy {
                 if (lunchBox.getItemList().getSelectedIndex() != -1 && lunchBox.getModel().size() > 0) {
                     fridge.addItem(lunchBox.getSelectedItem());
                     lunchBox.removeSelectedItem();
-
+                    
                     updateCalorieCounter();
                 }
             }
@@ -256,12 +258,14 @@ public class EatHealthy {
         packLunchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 profile.setWeeklyScore(profile.getWeeklyScore() 
-                        + lunchBox.getTotalPoints((double)profile.getWeight(), 
-                                profile.getAge(), profile.getSex()));
+                        + Math.round(lunchBox.getTotalPoints((double)profile.getWeight(), 
+                                profile.getAge(), profile.getSex())));
+                fsp.update(Math.round(lunchBox.getTotalPoints((double)profile.getWeight(), 
+                                profile.getAge(), profile.getSex())));
                 lunchBox.clearList();
                 scoreBoard.setText("SCORE: " + profile.getWeeklyScore());
                 if (day.isFriday()) {
-                    fridge.fillRandom();
+                    fridge.fillRandom(profile.getUnlock());
                     profile.setWeeklyHigh(profile.getWeeklyScore());
                     profile.setWeeklyScore(0);
                     highScore.setText("HIGHSCORE: " + profile.getWeeklyHigh());
@@ -276,7 +280,7 @@ public class EatHealthy {
         // adds function to the fill random button
         randomButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                fridge.fillRandom();
+                fridge.fillRandom(profile.getUnlock());
                 lunchBox.clearList();
             }
         });
@@ -351,6 +355,11 @@ public class EatHealthy {
 
     public JPanel getGUIPanel(){
         return guiPanel;
+    }
+    
+    public void setPoints(){
+        this.scoreBoard.setText("SCORE: " + profile.getWeeklyScore());
+        this.highScore.setText("HIGHSCORE: " + profile.getWeeklyHigh());
     }
 }
 

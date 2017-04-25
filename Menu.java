@@ -150,6 +150,7 @@ import javax.swing.JPanel;
                 handler.getGame().getLunchBox().setFoods(profile.getLunchBox());
                 handler.getGame().setProfile(profile);
                 handler.getGame().setDay(profile.getDay());
+                handler.getGame().setPoints();
 
                 handler.getGame().updateCalorieCounter();
                 handler.changeGameState(State.GAME);
