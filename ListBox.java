@@ -285,8 +285,9 @@ public class ListBox extends JPanel {
             tempFoodList.add(FoodAssets.fm.getFoods().get(i));
         }
 
-        // randomly take items
-        for (int i = 0; i < 20; i++) {
+        // randomly take 35 items to store in fridge. The max items player can pack in a week is 25 (5 days * 5 foods) 
+        // so that leaves 10 extra foods that can be used in different combinations.
+        for (int i = 0; i < 35; i++) {
             randNum = r.nextInt(upperBound);
             // System.out.println(randNum);
             upperBound--;
