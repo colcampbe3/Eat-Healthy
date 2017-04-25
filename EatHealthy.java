@@ -2,6 +2,7 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -10,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,7 +22,7 @@ import javax.swing.border.EmptyBorder;
 public class EatHealthy {
 
     public static final int WIDTH = 1024;
-    public static final int HEIGHT = WIDTH / 12 * 9 + 20; // aspect ratio 12:9
+    public static final int HEIGHT = WIDTH / 12 * 9 + 43; // aspect ratio 12:9
 
     private JPanel guiPanel, gamePanel;
     private Handler handler;
@@ -32,9 +34,9 @@ public class EatHealthy {
     private Window window;
     private JLabel cal, pts, cap, counter, goal, scoreBoard, highScore;
     private User profile;
-//    private boolean newGame = false;
-
     private int calGoal = 1200;
+    
+    public int yOffset = 30;
 
     public static void main(String[] args) {
 
@@ -81,23 +83,28 @@ public class EatHealthy {
 
         // Creates window to hold all components
         window = new Window(WIDTH, HEIGHT, "Eat Healthy");
-        fridge = new ListBox(WIDTH - ListBox.DEFAULT_WIDTH - 10, 50, ListBox.DEFAULT_WIDTH, ListBox.DEFAULT_HEIGHT,
+        fridge = new ListBox(WIDTH - ListBox.DEFAULT_WIDTH - 10, 50 + yOffset, ListBox.DEFAULT_WIDTH, ListBox.DEFAULT_HEIGHT,
                 "FRIDGE");
-        lunchBox = new ListBox(10, 50, ListBox.DEFAULT_WIDTH, 190, "LUNCH BOX");
+        lunchBox = new ListBox(10, 50 + yOffset, ListBox.DEFAULT_WIDTH, 190, "LUNCH BOX");
         lunchBox.setMaxCapacity(5);
 
         day = new Calendar();
         
         //points panel initialization
         JPanel z = new JPanel();
-        z.setBackground(Color.ORANGE);
-        scoreBoard = new JLabel("SCORE: " + profile.getWeeklyScore());
-        highScore = new JLabel("HIGHSCORE: " + profile.getWeeklyHigh());
+//        z.setBackground(Color.ORANGE);
+        z.setOpaque(false);
+        scoreBoard = new JLabel(Integer.toString(profile.getWeeklyScore()));
+        scoreBoard.setForeground(Color.white);
+        scoreBoard.setFont(new Font("impact", Font.PLAIN, 21));
+        highScore = new JLabel(Integer.toString(profile.getWeeklyHigh()));
+        highScore.setFont(new Font("impact", Font.PLAIN, 21));
+        highScore.setForeground(Color.white);
         z.setLayout(new BoxLayout(z, BoxLayout.Y_AXIS));
         z.setBorder(new EmptyBorder(4, 4, 4, 4));
         z.add(scoreBoard);
         z.add(highScore);
-        z.setBounds(300, 5, 380, 60);
+        z.setBounds(930, -2, 180, 60);
         // creates calorie counter
         JPanel p = new JPanel();
         counter = new JLabel("<HTML><U>Nutrition</U><HTML>", SwingConstants.CENTER);
@@ -188,8 +195,8 @@ public class EatHealthy {
         removeButton = new JButton("Remove Food");
         packLunchButton = new JButton("Pack Lunch");
         randomButton = new JButton("Fill Random");
-        testSave = new JButton("Test Save");
-        testReturn = new JButton("Main Menu");
+        testSave = new JButton();
+        testReturn = new JButton();
 
         testSave.addActionListener(new ActionListener(){
 
@@ -204,11 +211,12 @@ public class EatHealthy {
             		// create directory if it doesn't exist
             		if(!directory.exists()){
             			directory.mkdir();
-            			System.out.println("making directory " + directory.toString());
+//            			System.out.println("making directory " + directory.toString());
             		}
                     ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path + profile.getName() + ".dat"));
                     out.writeObject(profile);
                     out.close();
+                    JOptionPane.showMessageDialog(null, "File saved!");
                 }
                 catch(Exception e) {
                     System.out.println("The File Could Not Be Saved.");
@@ -259,13 +267,13 @@ public class EatHealthy {
                         + lunchBox.getTotalPoints((double)profile.getWeight(), 
                                 profile.getAge(), profile.getSex())));
                 lunchBox.clearList();
-                scoreBoard.setText("SCORE: " + profile.getWeeklyScore());
+                scoreBoard.setText(Integer.toString(profile.getWeeklyScore()));
                 if (day.isFriday()) {
                     fridge.fillRandom(profile.getUnlock());
                     profile.setWeeklyHigh(profile.getWeeklyScore());
                     profile.setWeeklyScore(0);
-                    highScore.setText("HIGHSCORE: " + profile.getWeeklyHigh());
-                    scoreBoard.setText("SCORE: " + profile.getWeeklyScore());
+                    highScore.setText(Integer.toString(profile.getWeeklyHigh()));
+                    scoreBoard.setText(Integer.toString(profile.getWeeklyScore()));
                 }
                 day.change();
 
@@ -282,7 +290,7 @@ public class EatHealthy {
         });
 
         // sets color, size & positioning for buttons
-        packLunchButton.setBounds(lunchBox.getX() + lunchBox.getWidth() / 2 - btnWidth / 2, 610, btnWidth, btnHeight);
+        packLunchButton.setBounds(lunchBox.getX() + lunchBox.getWidth() / 2 - btnWidth / 2, 610 + yOffset, btnWidth, btnHeight);
         packLunchButton.setBackground(btnColor);
         packLunchButton.setForeground(Color.WHITE);
         addButton.setBounds(fridge.getX() + ListBox.DEFAULT_WIDTH / 2 - btnWidth / 2,
@@ -294,9 +302,26 @@ public class EatHealthy {
         removeButton.setBackground(btnColor);
         removeButton.setForeground(Color.WHITE);
 
-        testSave.setBounds(addButton.getX(), addButton.getY() + 100, btnWidth, btnHeight);
-        testReturn.setBounds(testSave.getX(), testSave.getY() + 50, btnWidth, btnHeight);
-
+        testSave.setBounds(100, 6, 46, 46);
+        testReturn.setBounds(40, 6, 46, 46);
+        
+        // sets images for save and return buttons
+        File f = new File("./res/icons/saveIcon.png");
+        if(f.exists()){
+        	testSave.setIcon(new ImageIcon("./res/icons/saveIcon.png"));
+        	testReturn.setIcon(new ImageIcon("./res/icons/mainmenu.png"));
+        }
+        f = new File("./res/icons/saveIconPress.png");
+        if(f.exists()){
+        	testSave.setPressedIcon(new ImageIcon("./res/icons/saveIconPress.png"));
+        	testReturn.setPressedIcon(new ImageIcon("./res/icons/mainmenuPress.png"));
+        }
+        f = new File("./res/icons/saveIconHover.png");
+        if(f.exists()){
+        	testSave.setRolloverIcon(new ImageIcon("./res/icons/saveIconHover.png"));
+        	testReturn.setRolloverIcon(new ImageIcon("./res/icons/mainmenuHover.png"));
+        }
+        
         gamePanel.add(addButton);
         gamePanel.add(removeButton);
         gamePanel.add(packLunchButton);
